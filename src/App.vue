@@ -25,9 +25,9 @@ import VuePlyr from "vue-plyr";
 import questions from "./assets/questions.json";
 import shuffle from "./lib/shuffle.js";
 
-let baseUrl = process.env.NODE_ENV === 'production'
-      ? '/flashcards/'
-      : '/'
+let baseUrl = process.env.NODE_ENV === 'development'
+      ? '/'
+      : '/flashcards/'
 
 let questionsQueue = shuffle(questions);
 let nextQuestion = questionsQueue.shift();
