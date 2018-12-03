@@ -2,14 +2,18 @@
   <div id="app">
     <vue-plyr @player="setPlayer" :options="plyrOptions">
       <audio>
-        <source :src="'/audio/' + audioFile" type="audio/mp3">
+        <source :src="baseUrl + 'audio/' + audioFile" type="audio/mp3">
       </audio>
     </vue-plyr>
     <Flashcard :front="question" :back="answer" v-on:click="showReply" :isQuestion="isQuestion"/>
     <div class="answer" v-show="showButtons">
       <p>Did you get it right?</p>
-      <button class="yes" v-on:click="nextQuestion(true)"><span>👍</span> Yes</button>
-      <button class="no" v-on:click="nextQuestion(false)"><span>👎</span> No</button>
+      <button class="yes" v-on:click="nextQuestion(true)">
+        <span>👍</span> Yes
+      </button>
+      <button class="no" v-on:click="nextQuestion(false)">
+        <span>👎</span> No
+      </button>
     </div>
   </div>
 </template>
@@ -19,7 +23,11 @@ import Flashcard from "./components/Flashcard";
 import Vue from "vue";
 import VuePlyr from "vue-plyr";
 import questions from "./assets/questions.json";
-import shuffle from "./lib/shuffle.js"
+import shuffle from "./lib/shuffle.js";
+
+let baseUrl = process.env.NODE_ENV === 'production'
+      ? '/flashcards/'
+      : '/'
 
 let questionsQueue = shuffle(questions);
 let nextQuestion = questionsQueue.shift();
@@ -38,6 +46,7 @@ export default {
   },
   data() {
     return {
+      baseUrl,
       audioFile: nextQuestion.sound,
       question: nextQuestion.question,
       answer: nextQuestion.answer,
@@ -68,7 +77,7 @@ export default {
         title: nextQuestion.question,
         sources: [
           {
-            src: "/audio/" + nextQuestion.sound,
+            src: baseUrl + "audio/" + nextQuestion.sound,
             type: "audio/mp3"
           }
         ]
@@ -82,14 +91,14 @@ export default {
     this.setQuestion(nextQuestion);
   },
   meta: {
-      title: 'Vue.js Flashcards'
-  },
+    title: "Vue.js Flashcards"
+  }
 };
 </script>
 
 <style>
 body {
-  background:#effafe;
+  background: #effafe;
 }
 
 #app {
@@ -110,49 +119,56 @@ button::-moz-focus-inner {
 }
 
 .answer button {
-  	border-radius: 300px;
-		border-width: 4px;
-		border-style: solid;
-    width:100px;
-    height:100px;
-    font-size:1.5rem;
-    font-weight:bold;
-    animation:grow 0.5s;
-    animation-timing-function:cubic-bezier(.17,.67,.26,.95);
+  border-radius: 300px;
+  border-width: 4px;
+  border-style: solid;
+  width: 100px;
+  height: 100px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  animation: grow 0.5s;
+  animation-timing-function: cubic-bezier(0.17, 0.67, 0.26, 0.95);
 }
 
 .answer button.yes {
-  background-color:#dafeaf;
-  border-color:#bdf081;
-  margin-right:1rem;
+  background-color: #dafeaf;
+  border-color: #bdf081;
+  margin-right: 1rem;
 }
 
 .answer button.yes:hover {
-  background-color:#bdf081;
+  background-color: #bdf081;
 }
 
 .answer button.no {
-  margin-left:1rem;
-  background-color:#fe9f9f;
-  border-color:#fe7f7f;
+  margin-left: 1rem;
+  background-color: #fe9f9f;
+  border-color: #fe7f7f;
 }
 
 .answer button.no:hover {
-  background-color:#fe7f7f;
+  background-color: #fe7f7f;
 }
 
 .answer button span {
-  display:block;
+  display: block;
 }
 
 @-webkit-keyframes grow {
- 0% {
--webkit-transform: scale( 0 );-moz-transform: scale( 0 );-o-transform: scale( 0 );-ms-transform: scale( 0 );transform: scale( 0 );
+  0% {
+    -webkit-transform: scale(0);
+    -moz-transform: scale(0);
+    -o-transform: scale(0);
+    -ms-transform: scale(0);
+    transform: scale(0);
   }
 
-  
   100% {
-  -webkit-transform: scale( 1 );-moz-transform: scale( 1 );-o-transform: scale( 1 );-ms-transform: scale( 1 );transform: scale( 1 );
+    -webkit-transform: scale(1);
+    -moz-transform: scale(1);
+    -o-transform: scale(1);
+    -ms-transform: scale(1);
+    transform: scale(1);
   }
 }
 </style>
