@@ -94,7 +94,7 @@ export default {
     },
     footerBack: {
       type: String,
-      default: "Click to show Front"
+      default: "Click to review question"
     }
   }
 };
